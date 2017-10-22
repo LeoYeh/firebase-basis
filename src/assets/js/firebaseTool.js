@@ -1,5 +1,5 @@
-const firebase = require('firebase')
-const firebaseui = require('firebaseui')
+// const firebase = require('firebase')
+// const firebaseui = require('firebaseui')
 
 export default {
   initApp() {
