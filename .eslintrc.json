@@ -1,0 +1,61 @@
+{
+  "extends": [
+      "airbnb-base"
+  ],
+  "env": {
+      "es6": true,
+      "browser": true,
+      "node": true
+  },
+  "plugins": [
+      "html", "vue"
+  ],
+  "settings": {
+      "html/html-extensions": [".html", ".vue"] 
+      // consider .html and .vue files as HTML
+  },
+  "parserOptions": {
+      "parser": "babel-eslint",
+      "ecmaVersion": 7,
+      "sourceType": "module",
+      "ecmaFeatures": {
+          "jsx": false,
+          "experimentalObjectRestSpread": true
+      }
+  },
+  "rules": {
+      //
+      "comma-dangle": 2,
+      "comma-style": ["error", "last"],
+      "no-extra-semi": 2,
+      "semi-spacing": 2,
+      "semi": ["error", "never"],
+      "indent": ["error", 2],
+      "space-before-blocks": 2,
+      // "no-unused-vars": 2,
+      "no-console": 0,
+      "no-unexpected-multiline": 2,
+      "no-multi-spaces": 2,
+      "no-extend-native": 0,
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": false, "optionalDependencies": false, "peerDependencies": false}],
+      /*web gene rule*/
+      "no-var": 0,
+      "one-var": 0,
+      "no-unused-vars": 0,
+      "no-undef": 0,
+      "no-use-before-define": 0,
+      "vars-on-top": 0,
+      "no-tabs": 0,
+      "func-names": 0,
+      "no-confusing-arrow": 0,
+      "import/no-mutable-exports": 0,
+      "no-alert": 0,
+      "guard-for-in": 0,
+      "no-restricted-syntax": 0,
+      "no-underscore-dangle": 0,
+      "no-param-reassign": 0,
+      "dot-notation": 0,
+      "new-cap": 0, //lib.input450X294()
+      "no-unused-expressions": 0
+  }
+}
