@@ -1,5 +1,5 @@
 <template lang="pug">
-div.index
+div.test
   h1 {{rep}}
 </template>
 
@@ -7,9 +7,7 @@ div.index
 // import functions from 'firebase-functions'
 // import admin from 'firebase-admin'
 import axios from 'axios'
-import * as types from '../assets/js/variables'
 import firebaseTool from '../assets/js/firebaseTool'
-import CookItem from '../components/CookItem.vue'
 
 // var functions = require('firebase-functions')
 
@@ -23,7 +21,6 @@ export default {
   computed: {
   },
   components: {
-    cookItem: CookItem,
   },
   watch: {
   },
@@ -43,27 +40,13 @@ export default {
       })
     },
   },
-  sockets: {
-    connect() {
-      console.log('socket connected')
-    },
-    customEmit(val) {
-      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
-    },
-  },
   mounted() {
-    // this.rep = this.getApi()
-    console.log(this.$socket)
-    this.$socket.on('fromServer', (msg) => {
-      alert(`msg ${msg}`)
-    })
-    this.$socket.emit('fromServer', 'leo')
   },
 }
 </script>
 
 <style lang="sass" scoped>
-  .index
+  .test
     padding-top: 30px
     p
       width: 100%
