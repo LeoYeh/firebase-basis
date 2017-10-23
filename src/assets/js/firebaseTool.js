@@ -93,8 +93,24 @@ export default {
       }
     })
   },
-  uFile() {
+  uFile(file) {
+    // Create a root reference
+    var storageRef = firebase.storage().ref()
 
+    // Create a reference to 'mountains.jpg'
+    var ref = storageRef.child(file.name)
+
+    // Create a reference to 'images/mountains.jpg'
+    // var mountainImagesRef = storageRef.child(`images/${file.name}`)
+
+    // While the file names are the same, the references point to different files
+    // mountainsRef.name === mountainImagesRef.name            // true
+    // mountainsRef.fullPath === mountainImagesRef.fullPath    // false
+    console.log(file)
+    // difference file name
+    ref.put(file).then((snapshot) => {
+      console.log(`Uploaded a blob or file! ${snapshot}`)
+    })
   },
   // live-stream-database
   // getDbPath

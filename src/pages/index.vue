@@ -144,17 +144,28 @@ export default {
         }
       }, 1 * 1000)
     },
+    toBlob(file) {
+      imgEditor.loadImg(file, (canvas) => {
+        // console.log('canvas ', canvas)
+        // const b64 = canvas.toDataURL('image/png')
+        // const blob = imgEditor.base64ToBlob(b64)
+        canvas.toBlob(
+          (blob) => {
+            // Do something with the blob object,
+            // e.g. creating a multipart form for file uploads:
+            const fileName = 'file'
+            var formData = new FormData()
+            formData.append('file', blob, fileName)
+              /* ... */
+            console.log(blob)
+          }, 'image/jpeg')
+        // console.log('b64 ', b64)
+      }, true)
+    },
     onAdd(file) {
       // console.log('file ', file)
-      // const iEditor = new imgEditor()
-      // console.log('imgEditor ', imgEditor.loadImg)
-      imgEditor.loadImg(file, (canvas) => {
-        console.log('canvas ', canvas)
-        // const b64 = canvas.toDataUrl()
-        // console.log('b64 ', b64)
-        // const blob = imgEditor.base64ToBlob(b64)
-        // console.log(blob)
-      }, true)
+      firebaseTool.initApp()
+      firebaseTool.uFile(file)
     },
   },
   created() {

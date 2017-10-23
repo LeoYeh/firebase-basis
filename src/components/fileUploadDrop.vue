@@ -79,7 +79,7 @@ export default {
       //   return;
       // }
     //   this.uploads.push(file)
-    //   this.$emit('onAdd', file)
+      this.$emit('onAdd', file)
     },
     removeImage(e) {
       this.image = ''

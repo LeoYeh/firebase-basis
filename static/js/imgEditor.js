@@ -62,7 +62,7 @@ var imgEditor = (function () {
       contentType = contentType || ''
       sliceSize = sliceSize || 512
       // console.log(b64Data);
-      var byteCharacters = atob(b64Data)
+      var byteCharacters = window.atob(b64Data)
       var byteArrays = []
       for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
         var slice = byteCharacters.slice(offset, offset + sliceSize)
