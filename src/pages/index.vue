@@ -1,24 +1,25 @@
 <template lang="pug">
-div.test
-  h1 上傳圖片
-  hr
-  h1 即時傳送
-  hr
-  h1 機器人驗證(visible)
-    .g-recaptcha.g1
-  hr
-  h1 機器人驗證(invisible)
-    form
-      button(class="g-recaptcha g2"
-        data-sitekey="6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5"
-        data-callback="onRecaptchaCb"
-        data-size="invisible")
-        | Submit
-  hr
-  h1 身分驗證
-  #firebaseui-auth-container
-  button(@click="onLogin" v-if="!utoken") login
-  button(@click="onVerify" v-else) verify
+div.index
+  .inner
+    h1 上傳圖片
+    hr
+    h1 即時傳送
+    hr
+    h1 機器人驗證(visible)
+      .g-recaptcha.g1
+    hr
+    h1 機器人驗證(invisible)
+      form
+        button(class="g-recaptcha g2"
+          data-sitekey="6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5"
+          data-callback="onRecaptchaCb"
+          data-size="invisible")
+          | Submit
+    hr
+    h1 身分驗證
+    #firebaseui-auth-container
+    button(@click="onLogin" v-if="!utoken") login
+    button(@click="onVerify" v-else) verify
 </template>
 
 <script>
@@ -73,7 +74,7 @@ export default {
       firebaseTool.initApp()
       var uiConfig = {
       // 這裡轉址 會被 router 轉回首頁
-        signInSuccessUrl: `/#/totest?dt=${new Date().getTime()}`,
+        signInSuccessUrl: '/',
         signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -94,12 +95,11 @@ export default {
     },
     onVerify() {
       firebaseTool.initApp()
-      console.log(firebase.auth(), firebase.auth().currentUser)
-      if (firebase.auth() && firebase.auth().currentUser) {
+      const auth = firebase.auth()
+      console.log(auth, auth.currentUser, auth.kc)
+      if (auth && auth.currentUser) {
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
           // Send token to your backend via HTTPS
-          // ...
-          // console.log('idToken ', idToken)
           this.utoken = idToken
           this.validate(idToken)
         }).catch((error) => {
@@ -113,10 +113,7 @@ export default {
       }
     },
     validate(token) {
-      // cloud
-      const path = 'https://us-central1-softpower-order-system.cloudfunctions.net/verify'
-      // local
-      // const path = 'http://localhost:5000/softpower-order-system/us-central1/verify'
+      const path = 'https://us-central1-test-ec76b.cloudfunctions.net/verify'
       const header = new Headers({
         // 'Access-Control-Allow-Origin': '*',
         // 'Content-Type': 'multipart/form-data',
@@ -142,14 +139,20 @@ export default {
         console.log(e)
       })
     },
+    checkAuth() {
+      setTimeout(() => {
+        console.log('firebase.auth().currentUser ', firebase.auth().currentUser)
+        if (!firebase.auth().currentUser) {
+          this.checkAuth()
+        }
+      }, 1 * 1000)
+    },
   },
   created() {
     window.onRecaptchaCb = (token) => {
       // console.log('g2 token ', token)
-      // cloud
-      // const path = 'https://us-central1-softpower-order-system.cloudfunctions.net/checkRecaptcha'
       // local
-      const path = 'http://localhost:5000/softpower-order-system/us-central1/checkRecaptcha'
+      const path = 'https://us-central1-test-ec76b.cloudfunctions.net/checkRecaptcha'
       const header = new Headers({
         // 'Access-Control-Allow-Origin': '*',
         'Content-Type': 'multipart/form-data',
@@ -185,14 +188,26 @@ export default {
       this.initReCaptcha()
     }
     //
-    this.onVerify()
+    // setTimeout(() => {
+    //   this.onVerify()
+    // }, 1 * 1000)
+    firebaseTool.initApp()
+    this.checkAuth()
   },
 }
 </script>
 
 <style lang="sass" scoped>
-  .test
+  .index
     padding-top: 30px
-    p
-      width: 100%
+    display: flex
+    justify-content: center
+    .inner
+      width: 50%
+      border: solid 1px black
+      border-radius: 10px
+      h1
+        align: center
+        .g1
+          display: inline-block
 </style>
