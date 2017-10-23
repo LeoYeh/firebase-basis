@@ -106,10 +106,17 @@ export default {
     // While the file names are the same, the references point to different files
     // mountainsRef.name === mountainImagesRef.name            // true
     // mountainsRef.fullPath === mountainImagesRef.fullPath    // false
-    console.log(file)
+    // console.log(file)
     // difference file name
-    ref.put(file).then((snapshot) => {
-      console.log(`Uploaded a blob or file! ${snapshot}`)
+    return new Promise((resolve, reject) => {
+      ref.put(file).then((rep) => {
+        // console.log(rep)
+        // this.image = rep.downloadURL
+        resolve(rep)
+        // console.log(`Uploaded a blob or file! ${JSON.stringify(snapshot)}`)
+      }).catch((e) => {
+        reject(e)
+      })
     })
   },
   // live-stream-database

@@ -23,6 +23,7 @@ div.index
    //- input#finput(type="file" name="file" @change="onFileUploaded($event)")
    //- input#ftext(v-model="fname")
    //- button(@click="onUpload") 上傳
+   img(:src="image" v-if="image" style="width:300px")
    fUpload(@onAdd="onAdd")
    hr
    h1 即時傳送
@@ -46,6 +47,7 @@ export default {
       rep: '',
       utoken: '',
       file: null,
+      image: '',
     }
   },
   computed: {
@@ -166,6 +168,9 @@ export default {
      // console.log('file ', file)
       firebaseTool.initApp()
       firebaseTool.uFile(file)
+        .then((rep) => {
+          this.image = rep.downloadURL
+        })
     },
   },
   created() {

@@ -7,7 +7,7 @@
        accept=".pdf,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.key,.gif" 
        style="display: none"
        @change="onFileUploaded($event)">
-     <p class="sub2">選擇需要的檔案上傳<br><span>僅限上傳30MB</span></p>
+     <p class="sub2">選擇需要的檔案上傳<br><span>僅限上傳5TB</span></p>
      <div class="icon arw" :class="{loaded:uploads.length > 0}"></div>
    </div>
    <transition-group name="slide-down" class="slide-down-transition-group" tag="div">
