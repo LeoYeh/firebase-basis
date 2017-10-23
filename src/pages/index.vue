@@ -1,32 +1,32 @@
 <template lang="pug">
 div.index
-  .inner
-    h1 機器人驗證(visible)
-      .g-recaptcha.g1
-    hr
-    h1 機器人驗證(invisible)
-      form
-        button(class="g-recaptcha g2"
-          data-sitekey="6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5"
-          data-callback="onRecaptchaCb"
-          data-size="invisible")
-          | Submit
-    hr
-    h1 身分驗證
-    #loader
-    #firebaseui-auth-container
-    button(@click="onLogin" v-if="!utoken") login
-    //- button(@click="onVerify" v-if="utoken") verify
-    button(@click="onLogout" v-if="utoken") logout
-    hr
-    h1 上傳圖片
-    //- input#finput(type="file" name="file" @change="onFileUploaded($event)")
-    //- input#ftext(v-model="fname")
-    //- button(@click="onUpload") 上傳
-    fUpload(@onAdd="onAdd")
-    hr
-    h1 即時傳送
-    hr
+ .inner
+   h1 機器人驗證(visible)
+     .g-recaptcha.g1
+   hr
+   h1 機器人驗證(invisible)
+     form
+       button(class="g-recaptcha g2"
+         data-sitekey="6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5"
+         data-callback="onRecaptchaCb"
+         data-size="invisible")
+         | Submit
+   hr
+   h1 身分驗證
+   #loader
+   #firebaseui-auth-container
+   button(@click="onLogin" v-if="!utoken") login
+   //- button(@click="onVerify" v-if="utoken") verify
+   button(@click="onLogout" v-if="utoken") logout
+   hr
+   h1 上傳圖片
+   //- input#finput(type="file" name="file" @change="onFileUploaded($event)")
+   //- input#ftext(v-model="fname")
+   //- button(@click="onUpload") 上傳
+   fUpload(@onAdd="onAdd")
+   hr
+   h1 即時傳送
+   hr
 </template>
 
 <script>
@@ -59,15 +59,15 @@ export default {
     getApi() {
       return new Promise((resolve, reject) => {
         axios.post('https://us-central1-softpower-order-system.cloudfunctions.net/ok', {})
-          .then((json) => {
-            resolve(json.data)
-          })
-          .then((rep) => {
-            console.log('rep ', rep)
-          })
-          .catch((err) => {
-            reject(err)
-          })
+         .then((json) => {
+           resolve(json.data)
+         })
+         .then((rep) => {
+           console.log('rep ', rep)
+         })
+         .catch((err) => {
+           reject(err)
+         })
       })
     },
     initReCaptcha() {
@@ -86,7 +86,7 @@ export default {
       location.reload()
     },
     onLogin() {
-      // const path = '../static/auth/login.html'
+     // const path = '../static/auth/login.html'
       const path = '/#/signup'
       window.open(path, 'Sign In', 'width=985,height=735')
     },
@@ -95,13 +95,13 @@ export default {
       console.log(auth, auth.currentUser)
       if (auth && auth.currentUser) {
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
-          // Send token to your backend via HTTPS
+         // Send token to your backend via HTTPS
           this.utoken = idToken
           this.validate(idToken)
         }).catch((error) => {
-          // Handle error
+         // Handle error
           this.utoken = null
-          // alert(`error ${error}`)
+         // alert(`error ${error}`)
         })
       } else {
         console.log('not log in yet')
@@ -111,8 +111,8 @@ export default {
     validate(token) {
       const path = 'https://us-central1-test-ec76b.cloudfunctions.net/verify'
       const header = new Headers({
-        // 'Access-Control-Allow-Origin': '*',
-        // 'Content-Type': 'multipart/form-data',
+       // 'Access-Control-Allow-Origin': '*',
+       // 'Content-Type': 'multipart/form-data',
         Accept: 'application/json',
         'Content-Type': 'application/json',
       })
@@ -123,18 +123,18 @@ export default {
         body: JSON.stringify({ idToken: token }) || '',
       }
       fetch(path, sentData)
-      .then(data => data.text())
-      .then(str => JSON.parse(str))
-      .then((rep) => {
-        // console.log(JSON.stringify(rep))
-        if (rep.result) {
-          console.log('user logined successful!')
-          // alert('user logined successful!')
-        }
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+     .then(data => data.text())
+     .then(str => JSON.parse(str))
+     .then((rep) => {
+       // console.log(JSON.stringify(rep))
+       if (rep.result) {
+         console.log('user logined successful!')
+         // alert('user logined successful!')
+       }
+     })
+     .catch((e) => {
+       console.log(e)
+     })
     },
     checkAuth() {
       setTimeout(() => {
@@ -146,38 +146,38 @@ export default {
     },
     toBlob(file) {
       imgEditor.loadImg(file, (canvas) => {
-        // console.log('canvas ', canvas)
-        // const b64 = canvas.toDataURL('image/png')
-        // const blob = imgEditor.base64ToBlob(b64)
+       // console.log('canvas ', canvas)
+       // const b64 = canvas.toDataURL('image/png')
+       // const blob = imgEditor.base64ToBlob(b64)
         canvas.toBlob(
-          (blob) => {
-            // Do something with the blob object,
-            // e.g. creating a multipart form for file uploads:
-            const fileName = 'file'
-            var formData = new FormData()
-            formData.append('file', blob, fileName)
-              /* ... */
-            console.log(blob)
-          }, 'image/jpeg')
-        // console.log('b64 ', b64)
+         (blob) => {
+           // Do something with the blob object,
+           // e.g. creating a multipart form for file uploads:
+           const fileName = 'file'
+           var formData = new FormData()
+           formData.append('file', blob, fileName)
+             /* ... */
+           console.log(blob)
+         }, 'image/jpeg')
+       // console.log('b64 ', b64)
       }, true)
     },
     onAdd(file) {
-      // console.log('file ', file)
+     // console.log('file ', file)
       firebaseTool.initApp()
       firebaseTool.uFile(file)
     },
   },
   created() {
     window.onRecaptchaCb = (token) => {
-      // console.log('g2 token ', token)
-      // local
+     // console.log('g2 token ', token)
+     // local
       const path = 'https://us-central1-test-ec76b.cloudfunctions.net/checkRecaptcha'
       const header = new Headers({
-        // 'Access-Control-Allow-Origin': '*',
+       // 'Access-Control-Allow-Origin': '*',
         'Content-Type': 'multipart/form-data',
-        // Accept: 'application/json',
-        // 'Content-Type': 'application/json',
+       // Accept: 'application/json',
+       // 'Content-Type': 'application/json',
       })
       const sentData = {
         method: 'post',
@@ -186,17 +186,17 @@ export default {
         body: JSON.stringify({ token }) || '',
       }
       fetch(path, sentData)
-      .then(data => data.text())
-      .then(str => JSON.parse(str))
-      .then((rep) => {
-        // console.log(JSON.stringify(rep))
-        if (rep.result) {
-          alert(rep.msg)
-        }
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+     .then(data => data.text())
+     .then(str => JSON.parse(str))
+     .then((rep) => {
+       // console.log(JSON.stringify(rep))
+       if (rep.result) {
+         alert(rep.msg)
+       }
+     })
+     .catch((e) => {
+       console.log(e)
+     })
     }
   },
   mounted() {
@@ -204,10 +204,10 @@ export default {
       grecaptcha.render(document.querySelector('.g2'), {
         sitekey: '6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5',
       })
-      // grecaptcha.execute()
+     // grecaptcha.execute()
       this.initReCaptcha()
     }
-    //
+   //
     firebaseTool.initApp()
     setTimeout(() => {
       this.onVerify()
@@ -217,19 +217,19 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  .index
-    display: flex
-    justify-content: center
-    align-items: center
-    width: 100%
-    height: 100%
-    .inner
-      padding: 15px
-      width: 50%
-      border: solid 1px black
-      border-radius: 10px
-      h1
-        align: center
-        .g1
-          display: inline-block
+ .index
+   display: flex
+   justify-content: center
+   align-items: center
+   width: 100%
+   height: 100%
+   .inner
+     padding: 15px
+     width: 50%
+     border: solid 1px black
+     border-radius: 10px
+     h1
+       align: center
+       .g1
+         display: inline-block
 </style>

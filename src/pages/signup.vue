@@ -1,8 +1,8 @@
 <template lang="pug">
 div.signup
-  .inner
-    #loader
-    #firebaseui-auth-container
+ .inner
+   #loader
+   #firebaseui-auth-container
 </template>
 
 <script>
@@ -52,8 +52,8 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  .signup
-    padding-top: 30px
-    display: flex
-    justify-content: center
+ .signup
+   padding-top: 30px
+   display: flex
+   justify-content: center
 </style>
