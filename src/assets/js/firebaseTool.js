@@ -21,7 +21,7 @@ export default {
     // FirebaseUI config.
     const uiConfig = {
       // 這裡轉址 會被 router 轉回首頁
-      // signInSuccessUrl: '/#/post',
+      signInSuccessUrl: '/',
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -29,7 +29,31 @@ export default {
         // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
         // firebase.auth.GithubAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        // {
+        //   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        //   requireDisplayName: true,
+        // },
       ],
+      // callbacks: {
+      //   signInSuccess(currentUser, credential, redirectUrl) {
+      //     // Do something.
+      //     // Return type determines whether we continue the redirect automatically
+      //     // or whether we leave that to developer to handle.
+      //     console.log('success')
+      //     return true
+      //   },
+      //   uiShown() {
+      //     // The widget is rendered.
+      //     // Hide the loader.
+      //     console.log('uiShown')
+      //     document.getElementById('loader').style.display = 'none'
+      //     // console.log('loader none')
+      //   },
+      // },
+      // credentialHelper: firebaseui.auth.CredentialHelper.ACCOUNT_CHOOSER_COM,
+      // queryParameterForWidgetMode: 'mode',
+      // queryParameterForSignInSuccessUrl: 'signInSuccessUrl',
+      signInFlow: 'popup',
       // Terms of service url.
       // Mok 音樂
       tosUrl: 'https://www.youtube.com/watch?v=eFPES1EEdkk',
@@ -40,7 +64,7 @@ export default {
     // The start method will wait until the DOM is loaded.
     ui.start('#firebaseui-auth-container', uiConfig)
     /* with auth */
-    this.checkUser(cb)
+    // this.checkUser(cb)
   },
   logout() {
     this.initApp()
@@ -69,6 +93,10 @@ export default {
       }
     })
   },
+  uFile() {
+
+  },
+  // live-stream-database
   // getDbPath
   getPath(dstr) {
     const dt = (!dstr) ? new Date() : new Date(dstr)

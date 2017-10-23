@@ -1,10 +1,6 @@
 <template lang="pug">
 div.index
   .inner
-    h1 上傳圖片
-    hr
-    h1 即時傳送
-    hr
     h1 機器人驗證(visible)
       .g-recaptcha.g1
     hr
@@ -17,9 +13,20 @@ div.index
           | Submit
     hr
     h1 身分驗證
+    #loader
     #firebaseui-auth-container
     button(@click="onLogin" v-if="!utoken") login
-    button(@click="onVerify" v-else) verify
+    //- button(@click="onVerify" v-if="utoken") verify
+    button(@click="onLogout" v-if="utoken") logout
+    hr
+    h1 上傳圖片
+    //- input#finput(type="file" name="file" @change="onFileUploaded($event)")
+    //- input#ftext(v-model="fname")
+    //- button(@click="onUpload") 上傳
+    fUpload(@onAdd="onAdd")
+    hr
+    h1 即時傳送
+    hr
 </template>
 
 <script>
@@ -27,6 +34,8 @@ div.index
 // import admin from 'firebase-admin'
 import axios from 'axios'
 import firebaseTool from '../assets/js/firebaseTool'
+// import imgEditor from '../../static/js/imgEditor'
+import fUpload from '../components/fileUploadDrop.vue'
 
 // var functions = require('firebase-functions')
 
@@ -36,11 +45,13 @@ export default {
     return {
       rep: '',
       utoken: '',
+      file: null,
     }
   },
   computed: {
   },
   components: {
+    fUpload,
   },
   watch: {
   },
@@ -70,33 +81,18 @@ export default {
         },
       })
     },
+    onLogout() {
+      firebaseTool.logout()
+      location.reload()
+    },
     onLogin() {
-      firebaseTool.initApp()
-      var uiConfig = {
-      // 這裡轉址 會被 router 轉回首頁
-        signInSuccessUrl: '/',
-        signInOptions: [
-        // Leave the lines as is for the providers you want to offer your users.
-        // firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-        // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-        // firebase.auth.GithubAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        ],
-      // Terms of service url.
-      // Mok 音樂
-        tosUrl: 'https://www.youtube.com/watch?v=eFPES1EEdkk',
-      }
-    // console.log('auth ')
-    // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth())
-    // The start method will wait until the DOM is loaded.
-      ui.start('#firebaseui-auth-container', uiConfig)
+      // const path = '../static/auth/login.html'
+      const path = '/#/signup'
+      window.open(path, 'Sign In', 'width=985,height=735')
     },
     onVerify() {
-      firebaseTool.initApp()
       const auth = firebase.auth()
-      console.log(auth, auth.currentUser, auth.kc)
+      console.log(auth, auth.currentUser)
       if (auth && auth.currentUser) {
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
           // Send token to your backend via HTTPS
@@ -132,7 +128,8 @@ export default {
       .then((rep) => {
         // console.log(JSON.stringify(rep))
         if (rep.result) {
-          alert('user logined successful!')
+          console.log('user logined successful!')
+          // alert('user logined successful!')
         }
       })
       .catch((e) => {
@@ -146,6 +143,18 @@ export default {
           this.checkAuth()
         }
       }, 1 * 1000)
+    },
+    onAdd(file) {
+      // console.log('file ', file)
+      // const iEditor = new imgEditor()
+      // console.log('imgEditor ', imgEditor.loadImg)
+      imgEditor.loadImg(file, (canvas) => {
+        console.log('canvas ', canvas)
+        // const b64 = canvas.toDataUrl()
+        // console.log('b64 ', b64)
+        // const blob = imgEditor.base64ToBlob(b64)
+        // console.log(blob)
+      }, true)
     },
   },
   created() {
@@ -188,21 +197,23 @@ export default {
       this.initReCaptcha()
     }
     //
-    // setTimeout(() => {
-    //   this.onVerify()
-    // }, 1 * 1000)
     firebaseTool.initApp()
-    this.checkAuth()
+    setTimeout(() => {
+      this.onVerify()
+    }, 0.5 * 1000)
   },
 }
 </script>
 
 <style lang="sass" scoped>
   .index
-    padding-top: 30px
     display: flex
     justify-content: center
+    align-items: center
+    width: 100%
+    height: 100%
     .inner
+      padding: 15px
       width: 50%
       border: solid 1px black
       border-radius: 10px
