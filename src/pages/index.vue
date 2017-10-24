@@ -251,6 +251,7 @@ export default {
     }
   },
   mounted() {
+    const href = window.location.href
     window.onloadRecapCallback = () => {
       grecaptcha.render(document.querySelector('.g2'), {
         sitekey: '6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5',
