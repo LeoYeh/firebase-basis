@@ -58,13 +58,11 @@ export default {
       // Mok 音樂
       tosUrl: 'https://www.youtube.com/watch?v=eFPES1EEdkk',
     }
-    // console.log('auth ')
     // Initialize the FirebaseUI Widget using Firebase.
     const ui = new firebaseui.auth.AuthUI(firebase.auth())
     // The start method will wait until the DOM is loaded.
     ui.start('#firebaseui-auth-container', uiConfig)
     /* with auth */
-    // this.checkUser(cb)
   },
   logout() {
     this.initApp()
@@ -76,7 +74,9 @@ export default {
   },
   checkUser(cb) {
     firebase.auth().onAuthStateChanged((user) => {
+      console.log('user ', user)
       if (user) {
+        console.log('user ', user)
         // console.log('user ', user.uid)
         const rep = /(hrZPH3k9TbcG2x52g2NnSQ6fVGx2|GwW6fb1RJWakaMZ7RCKrEchDP212)/.test(user.uid)
         // this.$vm.data = { token: rep }
@@ -93,12 +93,28 @@ export default {
       }
     })
   },
+  addFile(file) {
+    this.initApp()
+    // new post
+    const newPostKey = firebase.database().ref().push().key
+    // const updates = {}
+    // return new Promis((resolve, reject) => {
+    //   firebase.database().ref().update(updates, (rep) => {
+    //     // console.log('rep ', JSON.stringify(rep))
+    //     if (cb)cb(rep)
+    //   })
+    // })
+  },
   uFile(file) {
+    const newPostKey = firebase.database().ref().push().key
+    // console.log('key ', newPostKey)
     // Create a root reference
     var storageRef = firebase.storage().ref()
-
+    const type = file.name.split('.')[1]
+    const rename = `${newPostKey}.${type}`
+    // console.log('rename ', rename)
     // Create a reference to 'mountains.jpg'
-    var ref = storageRef.child(file.name)
+    var ref = storageRef.child(rename)
 
     // Create a reference to 'images/mountains.jpg'
     // var mountainImagesRef = storageRef.child(`images/${file.name}`)

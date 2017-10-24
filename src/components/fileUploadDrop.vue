@@ -7,8 +7,10 @@
        accept=".pdf,.txt,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.key,.gif" 
        style="display: none"
        @change="onFileUploaded($event)">
-     <p class="sub2">選擇需要的檔案上傳<br><span>僅限上傳5TB</span></p>
-     <div class="icon arw" :class="{loaded:uploads.length > 0}"></div>
+    <a href="#">
+      <p class="sub2">選擇需要的檔案上傳<br><span>僅限上傳5TB</span></p>
+      <div class="icon arw" :class="{loaded:uploads.length > 0}"></div>
+    </a>
    </div>
    <transition-group name="slide-down" class="slide-down-transition-group" tag="div">
      <div class="file-upload-drop-list" key="dropdown">
@@ -91,4 +93,18 @@ export default {
 }
 </script>
 <style lang="sass">
+.file-upload-drop
+  a
+    text-decoration: none
+    border-radius: 10px
+    background-color: rgba(#555, .5)
+    display: block
+    width: 150px
+    margin: auto
+    padding: 1px
+    padding-left: 10px
+    padding-right: 10px
+    border: solid 1px #999
+    &:visited
+      color: #333
 </style>

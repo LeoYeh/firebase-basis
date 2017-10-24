@@ -1,33 +1,40 @@
 <template lang="pug">
 div.index
  .inner
-   h1 機器人驗證(visible)
-     .g-recaptcha.g1
-   hr
-   h1 機器人驗證(invisible)
-     form
-       button(class="g-recaptcha g2"
-         data-sitekey="6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5"
-         data-callback="onRecaptchaCb"
-         data-size="invisible")
-         | Submit
-   hr
-   h1 身分驗證
-   #loader
-   #firebaseui-auth-container
-   button(@click="onLogin" v-if="!utoken") login
-   //- button(@click="onVerify" v-if="utoken") verify
-   button(@click="onLogout" v-if="utoken") logout
-   hr
-   h1 上傳圖片
-   //- input#finput(type="file" name="file" @change="onFileUploaded($event)")
-   //- input#ftext(v-model="fname")
-   //- button(@click="onUpload") 上傳
-   img(:src="image" v-if="image" style="width:300px")
-   fUpload(@onAdd="onAdd")
-   hr
-   h1 即時傳送
-   hr
+    h1 機器人驗證(invisible)
+      form
+        button(class="g-recaptcha g2"
+          data-sitekey="6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5"
+          data-callback="onRecaptchaCb"
+          data-size="invisible")
+          | Submit
+    hr
+    h1 身分驗證
+    #loader
+    #firebaseui-auth-container
+    button(@click="onLogin" v-if="!utoken") login
+    //- button(@click="onVerify" v-if="utoken") verify
+    button(@click="onLogout" v-if="utoken") logout
+    hr
+    h1 上傳圖片
+    //- input#finput(type="file" name="file" @change="onFileUploaded($event)")
+    //- input#ftext(v-model="fname")
+    //- button(@click="onUpload") 上傳
+    a(:href="image" target="_blank")
+      p {{image}}
+      img(:src="image" v-if="image" style="width:300px")
+    fUpload(@onAdd="onAdd")
+    hr
+    h1 即時傳送
+      p(v-if="uname") 歡迎登入{{uname}}
+    .chat-room
+      .col.ctl
+        input#ctxt(@keyup.enter="onSend" v-model="msg") 
+        button#cbtn(@click="onSend") send
+      .col.view
+        ul
+          li(v-for="item in list") {{item}}
+    hr
 </template>
 
 <script>
@@ -48,6 +55,9 @@ export default {
       utoken: '',
       file: null,
       image: '',
+      list: [],
+      uname: '',
+      msg: '',
     }
   },
   computed: {
@@ -84,6 +94,7 @@ export default {
       })
     },
     onLogout() {
+      this.uname = ''
       firebaseTool.logout()
       location.reload()
     },
@@ -94,8 +105,9 @@ export default {
     },
     onVerify() {
       const auth = firebase.auth()
-      console.log(auth, auth.currentUser)
+      // console.log(auth, auth.currentUser)
       if (auth && auth.currentUser) {
+        this.uname = auth.currentUser.email.split('@')[0]
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then((idToken) => {
          // Send token to your backend via HTTPS
           this.utoken = idToken
@@ -106,7 +118,7 @@ export default {
          // alert(`error ${error}`)
         })
       } else {
-        console.log('not log in yet')
+        // console.log('not log in yet')
         this.utoken = null
       }
     },
@@ -172,6 +184,40 @@ export default {
           this.image = rep.downloadURL
         })
     },
+    // 聊天區
+    onSend() {
+      // console.log('onsend')
+      if (this.msg.length > 0) {
+        const newPostKey = firebase.database().ref().push().key
+        const update = {}
+        update[`chat/${newPostKey}`] = this.msg
+
+        firebase.database().ref().update(update, (rep) => {
+          this.msg = ''
+        // if (cb)cb(rep)
+        })
+      } else {
+        alert('請輸入文字！')
+      }
+    },
+    initChat() {
+      const starCountRef = firebase.database().ref('chat').limitToLast(3)
+      starCountRef.on('value', (rep) => {
+        // const obj = Object.assign({}, rep)
+        // console.log('obj =>', JSON.stringify(obj))
+        const obj = JSON.parse(JSON.stringify(rep))
+        // console.log(obj['-KxBsU3u7vIHB-5h--a9'])
+        // console.log(obj['-KxBaMR3MEci_y47wXB8'])
+        this.list = []
+        Object.entries(obj).forEach(([key, v]) => {
+          // console.log(v)
+          // this.list = [...this.list, v]
+          this.list.push(v)
+        })
+        this.list.reverse()
+        // console.log(this.list)
+      })
+    },
   },
   created() {
     window.onRecaptchaCb = (token) => {
@@ -209,32 +255,39 @@ export default {
       grecaptcha.render(document.querySelector('.g2'), {
         sitekey: '6LcZBDUUAAAAALwAPRxBbr1zGhnyNARrnW-VGhq5',
       })
-     // grecaptcha.execute()
-      this.initReCaptcha()
+      // grecaptcha.execute()
+      // this.initReCaptcha()
     }
-   //
+    //
     firebaseTool.initApp()
     setTimeout(() => {
       this.onVerify()
     }, 0.5 * 1000)
+    this.initChat()
   },
 }
 </script>
 
 <style lang="sass" scoped>
- .index
-   display: flex
-   justify-content: center
-   align-items: center
-   width: 100%
-   height: 100%
-   .inner
-     padding: 15px
-     width: 50%
-     border: solid 1px black
-     border-radius: 10px
-     h1
-       align: center
-       .g1
-         display: inline-block
+  .index
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 100%
+    height: 100%
+    .inner
+      padding: 15px
+      width: 400px
+      border: solid 1px black
+      border-radius: 10px
+      h1
+        align: center
+        .g1
+          display: inline-block
+      .chat-room
+        display: flex
+        input
+          width: 80px
+        .col
+          width: 50%
 </style>
