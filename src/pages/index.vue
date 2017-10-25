@@ -25,7 +25,7 @@ div.index
       img(:src="image" v-if="image" style="width:300px")
     fUpload(@onAdd="onAdd")
     hr
-    h1 即時傳送
+    h1 realtime-database 即時傳送
       p(v-if="uname") 歡迎登入{{uname}}
     .chat-room
       .col.ctl
@@ -35,12 +35,21 @@ div.index
         ul
           li(v-for="item in list") {{item}}
     hr
+    h1 同步更新
+    .sync-room
+      .col
+        input#stxt(@keyup.enter="onSendSync" v-model="smsg") 
+        button#sbtn(@click="onSendSync") send
+      .col
+        ul
+          li(v-for="item in slist") {{item}}
 </template>
 
 <script>
 // import functions from 'firebase-functions'
 // import admin from 'firebase-admin'
 import axios from 'axios'
+
 import firebaseTool from '../assets/js/firebaseTool'
 // import imgEditor from '../../static/js/imgEditor'
 import fUpload from '../components/fileUploadDrop.vue'
@@ -58,6 +67,8 @@ export default {
       list: [],
       uname: '',
       msg: '',
+      smsg: '',
+      slist: [],
     }
   },
   computed: {
@@ -218,6 +229,47 @@ export default {
         // console.log(this.list)
       })
     },
+    onSendSync() {
+      var db = firebase.firestore()
+      // 使用 亂數 新增
+      db.collection('list').add({ msg: this.smsg })
+      .then((docRef) => {
+        console.log('Document written with ID: ', docRef.id)
+        this.smsg = ''
+      })
+      .catch((error) => {
+        console.error('Error adding document: ', error)
+      })
+      // 更新 item 文件
+      // const ref = db.collection('list').doc('item')
+      // ref.set({ msg: this.smsg })
+    },
+    initDb() {
+      var db = firebase.firestore()
+      // db.collection('users').get().then((querySnapshot) => {
+      //   querySnapshot.forEach((doc) => {
+      //     console.log(`${doc.id} => ${doc.data()}`)
+      //   })
+      // })
+
+      this.slist = []
+      db.collection('list').limit(3)
+      .onSnapshot((doc) => {
+        // console.log('Current data: ', doc)
+        doc.docChanges.forEach((change) => {
+          // console.log(`User ${change.doc.msg} is now online.`)
+          if (change.type === 'added') {
+            this.slist.push(change.doc.data().msg)
+            // console.log(`User ${change.doc.data().msg} is now online.`)
+          }
+          // if (change.type === 'removed') {
+          //   console.log(`User ${change.doc.msg} has gone offline.`)
+          // }
+        })
+        this.slist.reverse()
+        this.slist = this.slist.slice(0, 3)
+      })
+    },
   },
   created() {
     window.onRecaptchaCb = (token) => {
@@ -265,6 +317,7 @@ export default {
       this.onVerify()
     }, 0.5 * 1000)
     this.initChat()
+    this.initDb()
   },
 }
 </script>
@@ -286,6 +339,12 @@ export default {
         .g1
           display: inline-block
       .chat-room
+        display: flex
+        input
+          width: 80px
+        .col
+          width: 50%
+      .sync-room
         display: flex
         input
           width: 80px

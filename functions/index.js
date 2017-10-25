@@ -14,21 +14,21 @@ function helloFn2(req, res) {
   const json = JSON.parse(req.body)
   const idToken = json.idToken
   admin.auth().verifyIdToken(idToken)
- .then((decodedToken) => {
-   // console.log('decode ', decodedToken)
-   var uid = decodedToken.uid
-   const rep = {
-     result: true,
-     uid,
-   }
-   res.status(200).send(rep)
- }).catch((error) => {
+  .then((decodedToken) => {
+  // console.log('decode ', decodedToken)
+    var uid = decodedToken.uid
+    const rep = {
+      result: true,
+      uid,
+    }
+    res.status(200).send(rep)
+  }).catch((error) => {
    // Handle error
-   const rep = {
-     result: false,
-   }
-   res.status(403).send(rep)
- })
+    const rep = {
+      result: false,
+    }
+    res.status(403).send(rep)
+  })
 }
 
 function helloFn(req, res) {
