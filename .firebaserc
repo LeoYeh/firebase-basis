@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "test-ec76b"
+    "default": "test-ec76b",
+    "staging": "test-ec76b"
   }
 }

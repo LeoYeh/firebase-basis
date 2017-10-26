@@ -43,6 +43,10 @@ div.index
       .col
         ul
           li(v-for="item in slist") {{item}}
+    hr
+    h1 發送通知
+    button(@click="onRequestMsg") 收通知請求
+    button(@click="onSendFcmMsg") 發送通知
 </template>
 
 <script>
@@ -182,7 +186,7 @@ export default {
            var formData = new FormData()
            formData.append('file', blob, fileName)
              /* ... */
-           console.log(blob)
+          //  console.log(blob)
          }, 'image/jpeg')
        // console.log('b64 ', b64)
       }, true)
@@ -270,6 +274,115 @@ export default {
         this.slist = this.slist.slice(0, 3)
       })
     },
+    // Notification
+    onRequestMsg() {
+      // Retrieve Firebase Messaging object.
+      const messaging = firebase.messaging()
+      messaging.requestPermission()
+      .then(() => {
+        console.log('Notification permission granted.')
+        // TODO(developer): Retrieve an Instance ID token for use with FCM.
+        messaging.setBackgroundMessageHandler((payload) => {
+          const title = 'Hello World'
+          const option = { body: payload.data.status }
+          return self.registration.showNotification(title, option)
+        })
+        // console.log('messaging.getToken() ', messaging.getToken())
+        /*
+        messaging.getToken()
+        .then((currentToken) => {
+          if (currentToken) {
+            console.log(`currentToken. ${currentToken}`)
+            // sendTokenToServer(currentToken)
+            // updateUIForPushEnabled(currentToken)
+          } else {
+            // Show permission request.
+            console.log('No Instance ID token available. Request permission to generate one.')
+            // Show permission UI.
+            // updateUIForPushPermissionRequired()
+            // setTokenSentToServer(false)
+          }
+        })
+        .catch((err) => {
+          console.log('An error occurred while retrieving token. ', err)
+          // showToken('Error retrieving Instance ID token. ', err)
+          // setTokenSentToServer(false)
+        })
+        */
+      })
+      .catch((err) => {
+        console.log('Unable to get permission to notify.', err)
+      })
+      /*
+      messaging.getToken()
+      .then((currentToken) => {
+        if (currentToken) {
+          console.log(`currentToken. ${currentToken}`)
+          // sendTokenToServer(currentToken)
+          // updateUIForPushEnabled(currentToken)
+        } else {
+          // Show permission request.
+          console.log('No Instance ID token available. Request permission to generate one.')
+          // Show permission UI.
+          // updateUIForPushPermissionRequired()
+          // setTokenSentToServer(false)
+        }
+      })
+      .catch((err) => {
+        console.log('An error occurred while retrieving token. ', err)
+        // showToken('Error retrieving Instance ID token. ', err)
+        // setTokenSentToServer(false)
+      })
+      */
+    },
+    onSendFcmMsg() {
+
+    },
+    initFCM() {
+      // Retrieve Firebase Messaging object.
+      const messaging = firebase.messaging()
+      messaging.getToken()
+      .then((currentToken) => {
+        if (currentToken) {
+          console.log(`currentToken. ${currentToken}`)
+          // sendTokenToServer(currentToken)
+          // updateUIForPushEnabled(currentToken)
+        } else {
+          // Show permission request.
+          console.log('No Instance ID token available. Request permission to generate one.')
+          // Show permission UI.
+          // updateUIForPushPermissionRequired()
+          // setTokenSentToServer(false)
+        }
+      })
+      .catch((err) => {
+        console.log('An error occurred while retrieving token. ', err)
+        // showToken('Error retrieving Instance ID token. ', err)
+        // setTokenSentToServer(false)
+      })
+      // Callback fired if Instance ID token is updated.
+      messaging.onTokenRefresh(() => {
+        messaging.getToken()
+        .then((refreshedToken) => {
+          console.log(`Token refreshed. ${refreshedToken}`)
+          // Indicate that the new Instance ID token has not yet been sent to the
+          // app server.
+          // setTokenSentToServer(false)
+          // Send Instance ID token to app server.
+          // sendTokenToServer(refreshedToken)
+          // ...
+        })
+        .catch((err) => {
+          console.log('Unable to retrieve refreshed token ', err)
+          // showToken('Unable to retrieve refreshed token ', err)
+        })
+      })
+
+      messaging.onMessage((payload) => {
+        console.log('Message received. ', payload)
+        // ...
+      })
+    },
   },
   created() {
     window.onRecaptchaCb = (token) => {
@@ -318,6 +431,7 @@ export default {
     }, 0.5 * 1000)
     this.initChat()
     this.initDb()
+    this.initFCM()
   },
 }
 </script>

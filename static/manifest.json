@@ -1,0 +1,25 @@
+{
+  "short_name": "testing",
+  "name": "Leo's testing for firebase cloud message",
+  "icons": [
+    {
+      "src": "img/fcm/launcher-icon-1x.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "img/fcm/launcher-icon-2x.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "img/fcm/launcher-icon-4x.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  // "start_url": "index.html?launcher=true",
+  "background_color": "#2196F3",
+  "display": "browser",
+  "gcm_sender_id": "103953800507"
+}
