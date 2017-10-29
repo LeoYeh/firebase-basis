@@ -76,6 +76,9 @@ export default {
     }
   },
   computed: {
+    isTokenSentToServer() {
+      return window.localStorage.getItem('sentToServer') === 1
+    },
   },
   components: {
     fUpload,
@@ -275,90 +278,89 @@ export default {
       })
     },
     // Notification
+    onSendingNotification4FCM() {
+      return new Promise((resolve, reject) => {
+        const header = {
+          accept: 'application/json',
+          'content-type': 'application/x-www-form-urlencoded',
+          Authorization: 'key=AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD',
+        }
+
+        const data = {}
+        data.body = JSON.stringify({
+          notification: {
+            title: 'Portugal vs. Denmark',
+            body: '5 to 1',
+            icon: 'firebase-logo.png',
+            click_action: 'http://localhost:8081',
+          },
+          to,
+        })
+
+        axios.post('https://fcm.googleapis.com/fcm/send', data, header)
+         .then((json) => {
+           resolve(json.data)
+         })
+         .then((rep) => {
+           console.log('rep ', rep)
+         })
+         .catch((err) => {
+           reject(err)
+         })
+      })
+    },
+    // Send the Instance ID token your application server, so that it can:
+    // - send messages back to this app
+    // - subscribe/unsubscribe the token from topics
+    sendTokenToServer() {
+      if (!this.isTokenSentToServer) {
+        console.log('Sending token to server...')
+      // TODO(developer): Send the current token to your server.
+        this.setTokenSentToServer(true)
+      } else {
+        console.log('Token already sent to server so won\'t send it again ' +
+          'unless it changes')
+      }
+    },
+    setTokenSentToServer(sent) {
+      window.localStorage.setItem('sentToServer', sent ? 1 : 0)
+    },
     onRequestMsg() {
       // Retrieve Firebase Messaging object.
       const messaging = firebase.messaging()
       messaging.requestPermission()
       .then(() => {
+        // console.log('Notification permission status:')
         console.log('Notification permission granted.')
-        // TODO(developer): Retrieve an Instance ID token for use with FCM.
-        messaging.setBackgroundMessageHandler((payload) => {
-          const title = 'Hello World'
-          const option = { body: payload.data.status }
-          return self.registration.showNotification(title, option)
-        })
-        // console.log('messaging.getToken() ', messaging.getToken())
-        /*
-        messaging.getToken()
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log(`currentToken. ${currentToken}`)
-            // sendTokenToServer(currentToken)
-            // updateUIForPushEnabled(currentToken)
-          } else {
-            // Show permission request.
-            console.log('No Instance ID token available. Request permission to generate one.')
-            // Show permission UI.
-            // updateUIForPushPermissionRequired()
-            // setTokenSentToServer(false)
-          }
-        })
-        .catch((err) => {
-          console.log('An error occurred while retrieving token. ', err)
-          // showToken('Error retrieving Instance ID token. ', err)
-          // setTokenSentToServer(false)
-        })
-        */
+        this.getFcmToken()
       })
       .catch((err) => {
         console.log('Unable to get permission to notify.', err)
       })
-      /*
-      messaging.getToken()
-      .then((currentToken) => {
-        if (currentToken) {
-          console.log(`currentToken. ${currentToken}`)
-          // sendTokenToServer(currentToken)
-          // updateUIForPushEnabled(currentToken)
-        } else {
-          // Show permission request.
-          console.log('No Instance ID token available. Request permission to generate one.')
-          // Show permission UI.
-          // updateUIForPushPermissionRequired()
-          // setTokenSentToServer(false)
-        }
-      })
-      .catch((err) => {
-        console.log('An error occurred while retrieving token. ', err)
-        // showToken('Error retrieving Instance ID token. ', err)
-        // setTokenSentToServer(false)
-      })
-      */
     },
     onSendFcmMsg() {
 
     },
-    initFCM() {
-      // Retrieve Firebase Messaging object.
+    getFcmToken() {
       const messaging = firebase.messaging()
       messaging.getToken()
       .then((currentToken) => {
         if (currentToken) {
           console.log(`currentToken. ${currentToken}`)
-          // sendTokenToServer(currentToken)
+          this.sendTokenToServer()
           // updateUIForPushEnabled(currentToken)
         } else {
           // Show permission request.
           console.log('No Instance ID token available. Request permission to generate one.')
           // Show permission UI.
           // updateUIForPushPermissionRequired()
-          // setTokenSentToServer(false)
+          this.setTokenSentToServer(false)
         }
       })
       .catch((err) => {
         console.log('An error occurred while retrieving token. ', err)
         // showToken('Error retrieving Instance ID token. ', err)
-        // setTokenSentToServer(false)
+        this.setTokenSentToServer(false)
       })
       // Callback fired if Instance ID token is updated.
       messaging.onTokenRefresh(() => {
@@ -367,9 +369,9 @@ export default {
           console.log(`Token refreshed. ${refreshedToken}`)
           // Indicate that the new Instance ID token has not yet been sent to the
           // app server.
-          // setTokenSentToServer(false)
+          this.setTokenSentToServer(false)
           // Send Instance ID token to app server.
-          // sendTokenToServer(refreshedToken)
+          this.sendTokenToServer(refreshedToken)
           // ...
         })
         .catch((err) => {
@@ -377,11 +379,15 @@ export default {
           // showToken('Unable to retrieve refreshed token ', err)
         })
       })
-
-      messaging.onMessage((payload) => {
-        console.log('Message received. ', payload)
-        // ...
-      })
+    },
+    initFCM() {
+      // Retrieve Firebase Messaging object.
+      this.getFcmToken()
+      // const messaging = firebase.messaging()
+      // messaging.onMessage((payload) => {
+      //   console.log('Message received. ', payload)
+      //   // ...
+      // })
     },
   },
   created() {
