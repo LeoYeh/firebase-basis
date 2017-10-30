@@ -3,6 +3,13 @@
     "rules": "database.rules.json"
   },
   "hosting": {
+    "public" :"./messaging",
+    "rewrites": [ {
+      "source": "/messaging/**",
+      "destination": "/messaging/index.html"
+    } ]
+  },
+  "hosting1": {
     "public": "./dist",
     "rewrites": [ {
       "source": "/dist/**",
