@@ -446,14 +446,14 @@ export default {
   .index
     display: flex
     justify-content: center
-    align-items: center
+    // align-items: center
     width: 100%
     height: 100%
+    // border: solid 1px black
+    // border-radius: 10px
     .inner
       padding: 15px
       width: 400px
-      border: solid 1px black
-      border-radius: 10px
       h1
         align: center
         .g1
