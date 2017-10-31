@@ -13,9 +13,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 
-build/
 
-config/
 
 *.cmd
 

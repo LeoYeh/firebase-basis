@@ -1,0 +1,36 @@
+[debug] [2017-10-31T03:57:01.408Z] ----------------------------------------------------------------------
+[debug] [2017-10-31T03:57:01.410Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\leo\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve -p 8081
+[debug] [2017-10-31T03:57:01.411Z] CLI Version:   3.13.1
+[debug] [2017-10-31T03:57:01.411Z] Platform:      win32
+[debug] [2017-10-31T03:57:01.411Z] Node Version:  v8.3.0
+[debug] [2017-10-31T03:57:01.411Z] Time:          Tue Oct 31 2017 11:57:01 GMT+0800 (台北標準時間)
+[debug] [2017-10-31T03:57:01.411Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-10-31T03:57:01.424Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-10-31T03:57:01.425Z] > authorizing via signed-in user
+[debug] [2017-10-31T03:57:01.427Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-10-31T03:57:01.427Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/O8CFcwfB6GBau49t9H3YlmUqYE2a6ssOYyLLl4erv5I',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Tue Oct 31 2017 11:57:01 GMT+0800 (台北標準時間)
+[debug] [2017-10-31T03:57:01.523Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-31T03:57:01.529Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/test-ec76b  
+ Tue Oct 31 2017 11:57:01 GMT+0800 (台北標準時間)
+[debug] [2017-10-31T03:57:02.319Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-31T03:57:02.320Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/test-ec76b/tokens  
+ Tue Oct 31 2017 11:57:02 GMT+0800 (台北標準時間)
+[debug] [2017-10-31T03:57:03.028Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'D:\iprefer\project\2017\a17_iprefer_firebase\dev\messaging'...
+[info] 
+[debug] [2017-10-31T03:57:03.031Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/test-ec76b  
+ Tue Oct 31 2017 11:57:03 GMT+0800 (台北標準時間)
+[debug] [2017-10-31T03:57:03.993Z] <<< HTTP RESPONSE 200
+[debug] [2017-10-31T03:57:03.993Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/507362328696/clients/_:getWebAppConfig  
+ Tue Oct 31 2017 11:57:03 GMT+0800 (台北標準時間)
+[debug] [2017-10-31T03:57:04.835Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: ./
+[info] +  hosting: Local server: http://localhost:8081
+
