@@ -12,6 +12,7 @@ div.index
     h1 身分驗證
     #loader
     #firebaseui-auth-container
+    p(v-if="uname") 歡迎登入{{uname}}
     button(@click="onLogin" v-if="!utoken") login
     //- button(@click="onVerify" v-if="utoken") verify
     button(@click="onLogout" v-if="utoken") logout
@@ -26,7 +27,6 @@ div.index
     fUpload(@onAdd="onAdd")
     hr
     h4 realtime-database 即時傳送
-      p(v-if="uname") 歡迎登入{{uname}}
     .chat-room
       .col.ctl
         input#ctxt(@keyup.enter="onSend" v-model="msg") 
@@ -34,15 +34,15 @@ div.index
       .col.view
         ul
           li(v-for="item in list") {{item}}
-    hr
-    h1 同步更新
-    .sync-room
-      .col
-        input#stxt(@keyup.enter="onSendSync" v-model="smsg") 
-        button#sbtn(@click="onSendSync") send
-      .col
-        ul
-          li(v-for="item in slist") {{item}}
+    //- hr
+    //- h1 同步更新
+    //- .sync-room
+    //-   .col
+    //-     input#stxt(@keyup.enter="onSendSync" v-model="smsg") 
+    //-     button#sbtn(@click="onSendSync") send
+    //-   .col
+    //-     ul
+    //-       li(v-for="item in slist") {{item}}
     hr
     h1 發送通知
     p 權證 
@@ -235,6 +235,7 @@ export default {
         // console.log(this.list)
       })
     },
+    // fireStore
     onSendSync() {
       var db = firebase.firestore()
       // 使用 亂數 新增
