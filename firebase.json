@@ -2,14 +2,14 @@
   "database": {
     "rules": "database.rules.json"
   },
-  "hosting": {
+  "hosting2": {
     "public" :"./messaging",
     "rewrites": [ {
       "source": "/messaging/**",
       "destination": "/messaging/index.html"
     } ]
   },
-  "hosting1": {
+  "hosting": {
     "public": "./dist",
     "rewrites": [ {
       "source": "/dist/**",

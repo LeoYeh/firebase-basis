@@ -25,7 +25,7 @@ div.index
       img(:src="image" v-if="image" style="width:300px")
     fUpload(@onAdd="onAdd")
     hr
-    h1 realtime-database 即時傳送
+    h4 realtime-database 即時傳送
       p(v-if="uname") 歡迎登入{{uname}}
     .chat-room
       .col.ctl
@@ -45,7 +45,8 @@ div.index
           li(v-for="item in slist") {{item}}
     hr
     h1 發送通知
-    button(@click="onRequestMsg") 收通知請求
+    p 權證 
+    input(v-model="iid")
     button(@click="onSendFcmMsg") 發送通知
 </template>
 
@@ -73,12 +74,10 @@ export default {
       msg: '',
       smsg: '',
       slist: [],
+      iid: '',
     }
   },
   computed: {
-    isTokenSentToServer() {
-      return window.localStorage.getItem('sentToServer') === 1
-    },
   },
   components: {
     fUpload,
@@ -253,12 +252,6 @@ export default {
     },
     initDb() {
       var db = firebase.firestore()
-      // db.collection('users').get().then((querySnapshot) => {
-      //   querySnapshot.forEach((doc) => {
-      //     console.log(`${doc.id} => ${doc.data()}`)
-      //   })
-      // })
-
       this.slist = []
       db.collection('list').limit(3)
       .onSnapshot((doc) => {
@@ -277,120 +270,36 @@ export default {
         this.slist = this.slist.slice(0, 3)
       })
     },
-    // Notification
-    onSendingNotification4FCM() {
-      return new Promise((resolve, reject) => {
-        const header = {
-          accept: 'application/json',
-          'content-type': 'application/x-www-form-urlencoded',
-          Authorization: 'key=AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD',
-        }
-
-        const data = {}
-        data.body = JSON.stringify({
-          notification: {
-            title: 'Portugal vs. Denmark',
-            body: '5 to 1',
-            icon: 'firebase-logo.png',
-            click_action: 'http://localhost:8081',
-          },
-          to,
-        })
-
-        axios.post('https://fcm.googleapis.com/fcm/send', data, header)
-         .then((json) => {
-           resolve(json.data)
-         })
-         .then((rep) => {
-           console.log('rep ', rep)
-         })
-         .catch((err) => {
-           reject(err)
-         })
-      })
-    },
-    // Send the Instance ID token your application server, so that it can:
-    // - send messages back to this app
-    // - subscribe/unsubscribe the token from topics
-    sendTokenToServer() {
-      if (!this.isTokenSentToServer) {
-        console.log('Sending token to server...')
-      // TODO(developer): Send the current token to your server.
-        this.setTokenSentToServer(true)
-      } else {
-        console.log('Token already sent to server so won\'t send it again ' +
-          'unless it changes')
-      }
-    },
-    setTokenSentToServer(sent) {
-      window.localStorage.setItem('sentToServer', sent ? 1 : 0)
-    },
-    onRequestMsg() {
-      // Retrieve Firebase Messaging object.
-      const messaging = firebase.messaging()
-      messaging.requestPermission()
-      .then(() => {
-        // console.log('Notification permission status:')
-        console.log('Notification permission granted.')
-        this.getFcmToken()
-      })
-      .catch((err) => {
-        console.log('Unable to get permission to notify.', err)
-      })
-    },
     onSendFcmMsg() {
+      var key = 'AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD'
+      var to = this.iid
+      var notification = {
+        title: 'Portugal vs. Denmark',
+        body: '5 to 1',
+        icon: 'firebase-logo.png',
+        click_action: 'http://localhost:8081',
+      }
 
-    },
-    getFcmToken() {
-      const messaging = firebase.messaging()
-      messaging.getToken()
-      .then((currentToken) => {
-        if (currentToken) {
-          console.log(`currentToken. ${currentToken}`)
-          this.sendTokenToServer()
-          // updateUIForPushEnabled(currentToken)
-        } else {
-          // Show permission request.
-          console.log('No Instance ID token available. Request permission to generate one.')
-          // Show permission UI.
-          // updateUIForPushPermissionRequired()
-          this.setTokenSentToServer(false)
-        }
+      fetch('https://fcm.googleapis.com/fcm/send', {
+        method: 'POST',
+        headers: {
+          Authorization: `key=${key}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          notification,
+          to,
+        }),
+      }).then((response) => {
+        console.log(response)
+        // alert(response)
+      }).catch((error) => {
+        console.error(error)
       })
-      .catch((err) => {
-        console.log('An error occurred while retrieving token. ', err)
-        // showToken('Error retrieving Instance ID token. ', err)
-        this.setTokenSentToServer(false)
-      })
-      // Callback fired if Instance ID token is updated.
-      messaging.onTokenRefresh(() => {
-        messaging.getToken()
-        .then((refreshedToken) => {
-          console.log(`Token refreshed. ${refreshedToken}`)
-          // Indicate that the new Instance ID token has not yet been sent to the
-          // app server.
-          this.setTokenSentToServer(false)
-          // Send Instance ID token to app server.
-          this.sendTokenToServer(refreshedToken)
-          // ...
-        })
-        .catch((err) => {
-          console.log('Unable to retrieve refreshed token ', err)
-          // showToken('Unable to retrieve refreshed token ', err)
-        })
-      })
-    },
-    initFCM() {
-      // Retrieve Firebase Messaging object.
-      this.getFcmToken()
-      // const messaging = firebase.messaging()
-      // messaging.onMessage((payload) => {
-      //   console.log('Message received. ', payload)
-      //   // ...
-      // })
     },
   },
   created() {
+    // 驗證碼 後端認證
     window.onRecaptchaCb = (token) => {
      // console.log('g2 token ', token)
      // local
@@ -437,7 +346,6 @@ export default {
     }, 0.5 * 1000)
     this.initChat()
     this.initDb()
-    this.initFCM()
   },
 }
 </script>
