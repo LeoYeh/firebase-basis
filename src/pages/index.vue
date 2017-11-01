@@ -34,20 +34,16 @@ div.index
       .col.view
         ul
           li(v-for="item in list") {{item}}
-    //- hr
-    //- h1 同步更新
-    //- .sync-room
-    //-   .col
-    //-     input#stxt(@keyup.enter="onSendSync" v-model="smsg") 
-    //-     button#sbtn(@click="onSendSync") send
-    //-   .col
-    //-     ul
-    //-       li(v-for="item in slist") {{item}}
     hr
     h1 發送通知
     p 權證 
     input(v-model="iid")
     button(@click="onSendFcmMsg") 發送通知
+    hr
+    h1 
+    p 群推
+    input(v-model="gname")
+    button(@click="createGroup" @keyup.enter="createGroup") 建立
 </template>
 
 <script>
@@ -75,6 +71,7 @@ export default {
       smsg: '',
       slist: [],
       iid: '',
+      gname: '',
     }
   },
   computed: {
@@ -271,6 +268,8 @@ export default {
         this.slist = this.slist.slice(0, 3)
       })
     },
+    onSendFcmMsgSingal() {
+    },
     onSendFcmMsg() {
       var key = 'AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD'
       var to = this.iid
@@ -294,6 +293,76 @@ export default {
       }).then((response) => {
         console.log(response)
         // alert(response)
+      }).catch((error) => {
+        console.error(error)
+      })
+    },
+    /* remove群推 */
+    delGroup() {
+      const data = {}
+      data.name = name
+      data.iids = arr
+      // user's authorization
+      // const path = 'https://us-central1-test-ec76b.cloudfunctions.net/newGp'
+      const path = 'http://localhost:5000/test-ec76b/us-central1/delGp'
+      const option = {}
+      axios.post(path, data)
+      .then((rep) => {
+        // console.log(rep.data)
+        // rep.data.msg.notification_key
+      })
+      .catch((err) => {})
+    },
+    getNotes() {
+      firebase.database().ref('/notification/').once('value').then((snapshot) => {
+        var obj = snapshot.val()
+        const ulist = Object.keys(obj)
+        // console.log(ulist)
+        createGroup(this.gname, ulist)
+      })
+    },
+    createGroup(name, arr) {
+      const data = {}
+      data.name = name
+      data.iids = arr
+      // user's authorization
+      // const path = 'https://us-central1-test-ec76b.cloudfunctions.net/newGp'
+      const path = 'http://localhost:5000/test-ec76b/us-central1/newGp'
+      const option = {}
+      axios.post(path, data)
+      .then((rep) => {
+        // console.log(rep.data)
+        // rep.data.msg.notification_key
+      })
+      .catch((err) => {})
+
+      // const option = {}
+      // option.method = 'POST'
+      // option.body = JSON.stringify(data)
+      // fetch(path, option)
+      // .then((rep) => {})
+      // .catch((err) => {})
+    },
+    createGroup1(name) {
+    // SERVER token
+      var key = 'AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD'
+      const url = 'https://android.googleapis.com/gcm/notification'
+      const data = {}
+      data.operation = 'create'
+      data.notification_key_name = name
+    // data.registration_ids = ['4', '8', '15', '16', '23', '42']
+      data.registration_ids = ['1']
+      // console.log(JSON.stringify(data))
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `key=${key}`,
+          'Content-Type': 'application/json',
+          project_id: '507362328696',
+        },
+        body: JSON.stringify(data),
+      }).then((response) => {
+        console.log(response)
       }).catch((error) => {
         console.error(error)
       })

@@ -77,6 +77,7 @@ limitations under the License.
 <!-- If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
 <script src="/__/firebase/3.9.0/firebase-app.js"></script>
 <script src="/__/firebase/3.9.0/firebase-messaging.js"></script>
+<script src="/__/firebase/3.9.0/firebase-database.js"></script>
 <script src="/__/firebase/init.js"></script>
 
 <script>
@@ -96,15 +97,15 @@ messaging.onTokenRefresh(() => {
     messaging.getToken()
     .then((refreshedToken) => {
       console.log('Token refreshed.')
-    // Indicate that the new Instance ID token has not yet been sent to the
-    // app server.
+      // Indicate that the new Instance ID token has not yet been sent to the
+      // app server.
       setTokenSentToServer(false)
-    // Send Instance ID token to app server.
+      // Send Instance ID token to app server.
       sendTokenToServer(refreshedToken)
-    // [START_EXCLUDE]
-    // Display new Instance ID token and clear UI of all previous messages.
+      // [START_EXCLUDE]
+      // Display new Instance ID token and clear UI of all previous messages.
       resetUI()
-    // [END_EXCLUDE]
+      // [END_EXCLUDE]
     })
     .catch((err) => {
       console.log('Unable to retrieve refreshed token ', err)
@@ -160,7 +161,6 @@ function resetUI() {
     // Show token in console and UI.
     var tokenElement = document.querySelector('#token')
     tokenElement.textContent = currentToken
-    iid = currentToken
   }
 
   // send msg
@@ -168,10 +168,10 @@ function resetUI() {
     var key = 'AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD'
     var to = iid
     var notification = {
-      title: 'Portugal vs. Denmark',
+      title: 'Hello World~',
       body: '5 to 1',
       icon: 'firebase-logo.png',
-      click_action: 'http://localhost:8081',
+      click_action: 'https://test-ec76b.firebaseapp.com/',
     }
 
     fetch('https://fcm.googleapis.com/fcm/send', {
@@ -197,7 +197,12 @@ function resetUI() {
   function sendTokenToServer(currentToken) {
     if (!isTokenSentToServer()) {
       console.log('Sending token to server...')
-    // TODO(developer): Send the current token to your server.
+      // TODO(developer): Send the current token to your server.
+      const newPostKey = firebase.database().ref().push().key
+      const update = {}
+      update[`notification/${currentToken}`] = true
+      firebase.database().ref().update(update, (rep) => {})
+
       setTokenSentToServer(true)
     } else {
       console.log('Token already sent to server so won\'t send it again ' +
@@ -206,12 +211,13 @@ function resetUI() {
   }
 
   function isTokenSentToServer() {
-    return window.localStorage.getItem('sentToServer') == 1
-}
+    return window.localStorage.getItem('sentToServer') === 1
+  }
 
+  // 儲存 token 等發送
   function setTokenSentToServer(sent) {
     window.localStorage.setItem('sentToServer', sent ? 1 : 0)
-}
+  }
 
   function showHideDiv(divId, show) {
     const div = document.querySelector(`#${divId}`)
@@ -228,12 +234,12 @@ function resetUI() {
     messaging.requestPermission()
       .then(() => {
         console.log('Notification permission granted.')
-      // TODO(developer): Retrieve an Instance ID token for use with FCM.
-      // [START_EXCLUDE]
-      // In many cases once an app has been granted notification permission, it
-      // should update its UI reflecting this.
+        // TODO(developer): Retrieve an Instance ID token for use with FCM.
+        // [START_EXCLUDE]
+        // In many cases once an app has been granted notification permission, it
+        // should update its UI reflecting this.
         resetUI()
-      // [END_EXCLUDE]
+        // [END_EXCLUDE]
       })
       .catch((err) => {
         console.log('Unable to get permission to notify.', err)
@@ -289,13 +295,15 @@ function resetUI() {
   function updateUIForPushEnabled(currentToken) {
     showHideDiv(tokenDivId, true)
     showHideDiv(permissionDivId, false)
+    iid = currentToken
+
     showToken(currentToken)
-}
+  }
 
   function updateUIForPushPermissionRequired() {
     showHideDiv(tokenDivId, false)
     showHideDiv(permissionDivId, true)
-}
+  }
 
   resetUI()
 </script>

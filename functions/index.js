@@ -88,3 +88,67 @@ exports.checkRecaptcha = functions.https.onRequest((req, res) => {
     corsShow(req, res, 'Recaptcha request failed.')
   })
 })
+
+/* 建立群推號碼 */
+exports.newGp = functions.https.onRequest((req, res) => {
+  const key = 'AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD'
+  // console.log('req ', req)
+  const json = req.body
+  const name = json.name
+  const iid = json.iid
+  // console.log('json ', json)
+  // corsShow(req, res, name)
+
+  const data = {}
+  data.operation = 'create'
+  data.notification_key_name = name
+  data.registration_ids = [iid]
+
+  rp({
+    uri: 'https://android.googleapis.com/gcm/notification',
+    method: 'POST',
+    headers: {
+      Authorization: `key=${key}`,
+      'Content-Type': 'application/json',
+      project_id: '507362328696',
+    },
+    body: data,
+    json: true,
+  }).then((result) => {
+    corsShow(req, res, result)
+  }).catch((err) => {
+    corsShow(req, res, err)
+  })
+})
+
+/* 新增群推號碼 */
+exports.newGp = functions.https.onRequest((req, res) => {
+  const key = 'AAAAdiEmwHg:APA91bHJ68k6wi0YBO5xrxvThqk9yYhXeN3gQiDHTL_7_8ukwPdlgmQjmmDVfJqoDpMTUjRAcgZ1ozfJd-sB8cIHKpC_5d9V_uPL_oWW5kKuWDtX1ujcRcmmDf71T01iOA2XN9IJUBxD'
+  // console.log('req ', req)
+  const json = req.body
+  const name = json.name
+  const iid = json.iid
+  // console.log('json ', json)
+  // corsShow(req, res, name)
+
+  const data = {}
+  data.operation = 'create'
+  data.notification_key_name = name
+  data.registration_ids = [iid]
+
+  rp({
+    uri: 'https://android.googleapis.com/gcm/notification',
+    method: 'POST',
+    headers: {
+      Authorization: `key=${key}`,
+      'Content-Type': 'application/json',
+      project_id: '507362328696',
+    },
+    body: data,
+    json: true,
+  }).then((result) => {
+    corsShow(req, res, result)
+  }).catch((err) => {
+    corsShow(req, res, err)
+  })
+})

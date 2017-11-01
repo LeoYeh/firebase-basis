@@ -1,0 +1,58 @@
+[debug] [2017-11-01T08:00:26.716Z] ----------------------------------------------------------------------
+[debug] [2017-11-01T08:00:26.718Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\leo\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve --only functions
+[debug] [2017-11-01T08:00:26.718Z] CLI Version:   3.13.1
+[debug] [2017-11-01T08:00:26.718Z] Platform:      win32
+[debug] [2017-11-01T08:00:26.718Z] Node Version:  v8.3.0
+[debug] [2017-11-01T08:00:26.719Z] Time:          Wed Nov 01 2017 16:00:26 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:00:26.719Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-11-01T08:00:26.730Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-01T08:00:26.731Z] > authorizing via signed-in user
+[debug] [2017-11-01T08:00:26.733Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/test-ec76b  
+ Wed Nov 01 2017 16:00:26 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:00:27.541Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-01T08:00:27.542Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/test-ec76b/tokens  
+ Wed Nov 01 2017 16:00:27 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:00:28.256Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'D:\iprefer\project\2017\a17_iprefer_firebase\dev'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2017-11-01T08:00:28.908Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/test-ec76b  
+ Wed Nov 01 2017 16:00:28 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:00:28.908Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/test-ec76b/apiKeys  
+ Wed Nov 01 2017 16:00:28 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:00:29.963Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-01T08:00:29.999Z] <<< HTTP RESPONSE 200
+[info] +  functions: newGp: http://localhost:5000/test-ec76b/us-central1/newGp
+[info] +  functions: checkRecaptcha: http://localhost:5000/test-ec76b/us-central1/checkRecaptcha
+[info] +  functions: verify: http://localhost:5000/test-ec76b/us-central1/verify
+[debug] [2017-11-01T08:34:28.027Z] ----------------------------------------------------------------------
+[debug] [2017-11-01T08:34:28.030Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\leo\AppData\Roaming\npm\node_modules\firebase-tools\bin\firebase serve --only functions
+[debug] [2017-11-01T08:34:28.030Z] CLI Version:   3.13.1
+[debug] [2017-11-01T08:34:28.030Z] Platform:      win32
+[debug] [2017-11-01T08:34:28.030Z] Node Version:  v8.3.0
+[debug] [2017-11-01T08:34:28.031Z] Time:          Wed Nov 01 2017 16:34:28 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:34:28.031Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-11-01T08:34:28.044Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-01T08:34:28.045Z] > authorizing via signed-in user
+[debug] [2017-11-01T08:34:28.047Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/test-ec76b  
+ Wed Nov 01 2017 16:34:28 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:34:28.926Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-01T08:34:28.927Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/test-ec76b/tokens  
+ Wed Nov 01 2017 16:34:28 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:34:29.675Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'D:\iprefer\project\2017\a17_iprefer_firebase\dev'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2017-11-01T08:34:29.976Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/test-ec76b  
+ Wed Nov 01 2017 16:34:29 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:34:29.977Z] >>> HTTP REQUEST GET https://apikeys.googleapis.com/v1/projects/test-ec76b/apiKeys  
+ Wed Nov 01 2017 16:34:29 GMT+0800 (台北標準時間)
+[debug] [2017-11-01T08:34:31.031Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-01T08:34:31.038Z] <<< HTTP RESPONSE 200
+[info] +  functions: verify: http://localhost:5000/test-ec76b/us-central1/verify
+[info] +  functions: checkRecaptcha: http://localhost:5000/test-ec76b/us-central1/checkRecaptcha
+[info] +  functions: newGp: http://localhost:5000/test-ec76b/us-central1/newGp
